@@ -17,6 +17,13 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+/**
+ * this class is used to generate status page base on Freemarker template 
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class WebTemplate {
 	private final static Logger LOG = LoggerFactory.getLogger(WebTemplate.class);
 	private final Template template;
@@ -33,6 +40,11 @@ public class WebTemplate {
 		}
 	}	
 
+	/**
+	 * method used to returned html status page
+	 * 
+	 * @return
+	 */
 	public String getHtml() {		
 		StringWriter writer = new StringWriter();
 		try {
@@ -48,6 +60,11 @@ public class WebTemplate {
 		return writer.toString();
 	}
 	
+	/**
+	 * helper method to retrieve status count
+	 * 
+	 * @return
+	 */
 	private String getStatusCount() {
 		int successCnt = 0;
 		for(Service service: this.svcList) {

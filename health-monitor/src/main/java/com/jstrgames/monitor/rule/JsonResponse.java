@@ -11,6 +11,14 @@ import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * this rule class is used to validate if the JSON response 
+ * meets condition defined
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class JsonResponse extends BaseRule {
 	private final static Logger LOG = LoggerFactory.getLogger(JsonResponse.class);
 	

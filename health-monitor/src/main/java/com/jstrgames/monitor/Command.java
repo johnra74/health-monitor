@@ -14,7 +14,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.server.NetworkListener;
 
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -28,9 +27,21 @@ import com.jstrgames.monitor.net.HealthConfigHandler;
 import com.jstrgames.monitor.net.HealthStatusHandler;
 import com.jstrgames.monitor.svc.Service;
 
+/**
+ * The main class to health monitor. this class will schedule all services 
+ * using quartz-scheduler and initiate the grizzly webserver
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ */
 public class Command {
 	private final static Logger LOG = LoggerFactory.getLogger(Command.class);
 	
+	/**
+	 * build command line options
+	 * 
+	 * @return
+	 */
 	private static Options buildCommandOptions() {
 		Options options = new Options();
 		options.addOption( "h", "help", false, "list help" );
@@ -43,10 +54,39 @@ public class Command {
 		return options;
 	}
 	
+	/**
+	 * helper method to read monitor-cfg.json from classpath when not
+	 * specified from command line
+	 * 
+	 * @return
+	 */
 	private static InputStream loadConfigFromDefault() {
 		return ClassLoader.getSystemResourceAsStream("monitor-cfg.json");
 	}
 	
+	/**
+	 * helper method to start up embedded webcontainer
+	 * 
+	 * @param cfgLoader
+	 * @param jobMgr
+	 * @throws IOException
+	 */
+	private static void startEmbeddedContainer(ConfigLoader cfgLoader, JobManager jobMgr ) 
+			throws IOException {
+		HttpServer server = HttpServer.createSimpleServer(
+				"/", cfgLoader.getHostname(), cfgLoader.getPort());
+		HealthStatusHandler statusHandler = new HealthStatusHandler(cfgLoader, jobMgr);
+		HealthConfigHandler cfgHandler = new HealthConfigHandler(cfgLoader);
+		server.getServerConfiguration().addHttpHandler(statusHandler, "/status.html");
+		server.getServerConfiguration().addHttpHandler(cfgHandler, "/service.json");
+		server.start();
+	}
+	
+	/**
+	 * application entry point
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		CommandLineParser cmdParser = new BasicParser(); 
 		Options options = buildCommandOptions();
@@ -70,14 +110,7 @@ public class Command {
 				JobManager jobMgr = new JobManager(factory.getScheduler(), list);
 				jobMgr.start();
 				
-				HttpServer server = HttpServer.createSimpleServer(
-						"/", cfgLoader.getHostname(), cfgLoader.getPort());
-				HealthStatusHandler statusHandler = new HealthStatusHandler(cfgLoader, jobMgr);
-				HealthConfigHandler cfgHandler = new HealthConfigHandler(cfgLoader);
-				server.getServerConfiguration().addHttpHandler(statusHandler, "/status.html");
-				server.getServerConfiguration().addHttpHandler(cfgHandler, "/service.json");
-				server.start();
-
+				startEmbeddedContainer(cfgLoader, jobMgr);
 			}
 		} catch (ParseException e) {
 			LOG.error("Failed to parse options", e);

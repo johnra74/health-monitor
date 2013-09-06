@@ -2,6 +2,14 @@ package com.jstrgames.monitor.rule;
 
 import java.util.Map;
 
+/**
+ * this abstract base class implements the required rule attributes
+ * of the Rule interface
+ *  
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public abstract class BaseRule implements Rule {
 	private Object actual;
 	private Object expected;

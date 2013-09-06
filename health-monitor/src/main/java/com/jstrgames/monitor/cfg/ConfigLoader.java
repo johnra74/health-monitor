@@ -52,6 +52,7 @@ public class ConfigLoader {
 	
 	/**
 	 * helper method to load Health Configuration
+	 * 
 	 * @param json
 	 * @throws ConfigurationException
 	 */

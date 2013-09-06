@@ -14,6 +14,14 @@ import com.jstrgames.monitor.cfg.ConfigLoader;
 import com.jstrgames.monitor.svc.Service;
 import com.jstrgames.monitor.tpl.WebTemplate;
 
+/**
+ * this handler class is called by the embedded web server (grizzly)
+ * when requests are made to retrieve "/status.html"
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class HealthStatusHandler extends HttpHandler {
 	
 	private JobManager jobMgr;
@@ -33,7 +41,14 @@ public class HealthStatusHandler extends HttpHandler {
 		}
 	}
 	
-	public void doGet(Request request, Response response) throws Exception {
+	/**
+	 * this method will handle the GET request
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	private void doGet(Request request, Response response) throws Exception {
 		NIOOutputStream out = response.createOutputStream();
 		List<Service> svcList = jobMgr.getServices();
 		WebTemplate template = new WebTemplate(this.cfgLoader.getTemplateDirectory(), svcList);

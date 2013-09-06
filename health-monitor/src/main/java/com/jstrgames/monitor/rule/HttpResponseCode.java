@@ -2,6 +2,14 @@ package com.jstrgames.monitor.rule;
 
 import java.util.Map;
 
+/**
+ * this rule class is used to validate if the response status code
+ *  meets condition defined
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class HttpResponseCode extends BaseRule {
 	
 	@Override
@@ -24,7 +32,13 @@ public class HttpResponseCode extends BaseRule {
 				break;
 				
 			case CONTAINS:
-				throw new FailedRuleException("response condition (CONTAINS) is not supported");
+				throw new FailedRuleException("invalid condition appeared!");
+				
+			case GREATERTHAN:
+				throw new FailedRuleException("invalid condition appeared!");
+				
+			case LESSTHAN:
+				throw new FailedRuleException("invalid condition appeared!");
 				
 			default:
 				throw new FailedRuleException("unsupported response condition appeared");

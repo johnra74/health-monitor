@@ -21,7 +21,15 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * this class will validate the status of HTTPS server status based on
+ * rules defined. It extends the HttpService (non-SSL) and overrides 
+ * relevant methods to ensure proper SSL connects are made 
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class HttpsService extends HttpService {
 	private final static Logger LOG = LoggerFactory.getLogger(HttpsService.class);
 	

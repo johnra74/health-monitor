@@ -32,6 +32,14 @@ import com.jstrgames.monitor.rule.HttpResponseBody;
 import com.jstrgames.monitor.rule.HttpResponseCode;
 import com.jstrgames.monitor.rule.Rule;
 
+/**
+ * this class will validate the status of HTTP server status based on
+ * rules defined
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class HttpService extends BaseService {
 	private final static Logger LOG = LoggerFactory.getLogger(HttpService.class);
 			
@@ -81,6 +89,11 @@ public class HttpService extends BaseService {
 		return this.password;
 	}
 	
+	/**
+	 * helper method to build the target URL
+	 * 
+	 * @return
+	 */
 	public String getURL() {
 		StringBuilder builder = new StringBuilder("http://");
 		builder.append(this.getHostname());
@@ -139,7 +152,7 @@ public class HttpService extends BaseService {
 	}
 	
 	/**
-	 * helper metho to retrieve protocol based on instanceof
+	 * helper method to retrieve protocol based on its instance
 	 * 
 	 * @return
 	 */

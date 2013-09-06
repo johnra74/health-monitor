@@ -9,6 +9,15 @@ import org.slf4j.LoggerFactory;
 import com.jstrgames.monitor.svc.Service;
 import com.jstrgames.monitor.svc.Service.Status;
 
+/**
+ * This is the default implementations of quartz-scheduler job. For
+ * each service to be monitored, there will be a corresponding 
+ * instance of this class  
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ * 
+ */
 public class ScheduledJob implements Job {
 	private final static Logger LOG = LoggerFactory.getLogger(ScheduledJob.class);
 	

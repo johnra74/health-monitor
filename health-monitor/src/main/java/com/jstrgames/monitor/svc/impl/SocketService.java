@@ -10,6 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import com.jstrgames.monitor.cfg.ValidationException;
 
+/**
+ * this class is used to verify a server is running at the
+ * specified port and host
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class SocketService extends BaseService {
 	private final static Logger LOG = LoggerFactory.getLogger(SocketService.class);
 			

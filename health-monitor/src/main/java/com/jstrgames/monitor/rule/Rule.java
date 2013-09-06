@@ -2,6 +2,14 @@ package com.jstrgames.monitor.rule;
 
 import java.util.Map;
 
+/**
+ * this interface represents rule to be verified by calling 
+ * service
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public interface Rule {	
 	public final static String RULES = "rules";
 	public final static String RULES_CLASSNAME = "classname";

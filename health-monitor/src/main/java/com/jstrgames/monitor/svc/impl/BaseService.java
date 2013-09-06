@@ -10,6 +10,14 @@ import com.jstrgames.monitor.rule.FailedRuleException;
 import com.jstrgames.monitor.rule.Rule;
 import com.jstrgames.monitor.svc.Service;
 
+/**
+ * this abstract class represents the base service and implements
+ * common implementation of Service interface  
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public abstract class BaseService implements Service {
 	private String servicename;
 	private String classname;
@@ -102,6 +110,11 @@ public abstract class BaseService implements Service {
 		rules.add(rule);
 	}
 	
+	/**
+	 * helper method to validate all rules associated with this service  
+	 * 
+	 * @throws FailedRuleException
+	 */
 	protected final void validateRules() throws FailedRuleException {
 		if(this.rules != null) {
 			for(Rule rule: this.rules) {

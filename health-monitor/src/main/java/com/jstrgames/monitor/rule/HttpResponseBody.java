@@ -2,6 +2,14 @@ package com.jstrgames.monitor.rule;
 
 import java.util.Map;
 
+/**
+ * this rule class is used to validate if the response body meets
+ * condition defined
+ * 
+ * @author Johnathan Ra
+ * @company JSTR Games, LLC
+ *
+ */
 public class HttpResponseBody extends BaseRule {
 	
 	@Override
@@ -13,24 +21,28 @@ public class HttpResponseBody extends BaseRule {
 		switch(this.getCondition()) {
 			case EQUALS:
 				if(! actualBody.equals(expectBody)) {
-					throw new FailedRuleException("response code does not equal expected");
+					throw new FailedRuleException("response body does not equal expected");
 				}
 				break;
 				
 			case CONTAINS:
 				if(! actualBody.contains(expectBody)) {
-					throw new FailedRuleException("response code does not contain expected");
+					throw new FailedRuleException("response body does not contain expected");
 				}
 				break;
 				
+			case GREATERTHAN:
+				throw new FailedRuleException("invalid condition appeared!");
+				
+			case LESSTHAN:
+				throw new FailedRuleException("invalid condition appeared!");
+			
 			default:
 				throw new FailedRuleException("unsupported response condition appeared");
 		}
 
 	}
 	
-	
-
 	@Override
 	public void setExtendedProperties(Map<String, Object> map) {
 		// DO NOTHING
