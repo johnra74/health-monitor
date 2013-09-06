@@ -35,10 +35,12 @@ public class ConfigLoader {
 	private final static String CFG_KEY_PORT = "port";
 	private final static String CFG_KEY_SERVICES_JSON = "services.json";
 	private final static String CFG_KEY_TEMPLATE_HOME = "template.home";
+	private final static String CFG_KEY_NOTIFICATION = "notification";
 	
 	private List<Map<String,Object>> cfgList;
 	private Map<String,Object> cfgMap;
-	private String json;
+	private NotificationConfig notifyCfg;
+	private String json;	
 	
 	/**
 	 * method to setup services from JSON string
@@ -56,11 +58,12 @@ public class ConfigLoader {
 	 * @param json
 	 * @throws ConfigurationException
 	 */
+	
 	private void loadConfiguration(String json) throws ConfigurationException {
 		List<Map<String,Object>> mainCfg = fromJSON(json);
-		cfgMap = mainCfg.get(0);
-		if(cfgMap.containsKey(CFG_KEY_SERVICES_JSON)) {
-			String fileName = (String) cfgMap.get(CFG_KEY_SERVICES_JSON);
+		this.cfgMap = mainCfg.get(0);
+		if(this.cfgMap.containsKey(CFG_KEY_SERVICES_JSON)) {
+			String fileName = (String) this.cfgMap.get(CFG_KEY_SERVICES_JSON);
 			try {
 				setServiceJSON(new FileInputStream(fileName));
 			} catch (FileNotFoundException e) {
@@ -70,8 +73,14 @@ public class ConfigLoader {
 		} else {
 			throw new ConfigurationException("monitor-cfg.json missing services.json");
 		}
+		
+		if(this.cfgMap.containsKey(CFG_KEY_NOTIFICATION)) {
+			@SuppressWarnings("unchecked")
+			final Map<String,Object> map = (Map<String,Object>) this.cfgMap.get(CFG_KEY_NOTIFICATION);
+			this.notifyCfg = new NotificationConfig(map, this.getTemplateDirectory());			
+		}
 	}
-	
+		
 	/**
 	 * method to setup services from input stream
 	 * 
@@ -88,6 +97,15 @@ public class ConfigLoader {
 			throw new ConfigurationException();
 		}
 	}	
+	
+	/**
+	 * method returns the notification config
+	 * 
+	 * @return
+	 */
+	public NotificationConfig getNotificationConfig() {
+		return this.notifyCfg;
+	}
 		
 	/**
 	 * method will return a list of services to monitor

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jstrgames.monitor.svc.Service;
+import com.jstrgames.monitor.svc.Service.Status;
 
 /**
  * This manager class will initiate quartz-scheduler for all
@@ -54,6 +55,30 @@ public class JobManager {
 	 */
 	public List<Service> getServices() {
 		return this.serviceList;
+	}
+	
+	/**
+	 * method will return status count
+	 * 
+	 * @return
+	 */
+	public int getSuccessCount() {
+		int successCnt = 0;
+		for(Service service: this.serviceList) {
+			if(service.getStatus() == Status.PASS) {
+				successCnt++;
+			}
+		}		
+		return successCnt;
+	}
+	
+	/**
+	 * method will return status count
+	 * 
+	 * @return
+	 */
+	public int getTotalCount() {		
+		return this.serviceList.size();
 	}
 	
 	/**

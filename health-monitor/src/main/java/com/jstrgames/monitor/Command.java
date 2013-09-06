@@ -1,10 +1,15 @@
 package com.jstrgames.monitor;
 
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -15,6 +20,10 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.glassfish.grizzly.http.server.HttpServer;
 
+import org.quartz.CronTrigger;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
@@ -23,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jstrgames.monitor.cfg.ConfigLoader;
 import com.jstrgames.monitor.cfg.ConfigurationException;
+import com.jstrgames.monitor.cfg.NotificationConfig;
 import com.jstrgames.monitor.net.HealthConfigHandler;
 import com.jstrgames.monitor.net.HealthStatusHandler;
 import com.jstrgames.monitor.svc.Service;
@@ -107,8 +117,15 @@ public class Command {
 				ConfigLoader cfgLoader = new ConfigLoader(in);
 				SchedulerFactory factory = new StdSchedulerFactory();
 				List<Service> list = cfgLoader.getServices();
-				JobManager jobMgr = new JobManager(factory.getScheduler(), list);
+				Scheduler scheduler = factory.getScheduler();
+				
+				JobManager jobMgr = new JobManager(scheduler, list);
 				jobMgr.start();
+				
+				if(cfgLoader.getNotificationConfig() != null) {
+					// notification has been setup, add to schedule
+					addNotificationJob(cfgLoader, scheduler, jobMgr);
+				}
 				
 				startEmbeddedContainer(cfgLoader, jobMgr);
 			}
@@ -130,6 +147,27 @@ public class Command {
 					LOG.error("Failed to close input stream", e);
 				}
 			}
+		}
+	}
+	
+	private static void addNotificationJob(ConfigLoader cfgLoader, 
+			Scheduler scheduler, JobManager jobMgr) {
+		NotificationConfig notifyCfg = cfgLoader.getNotificationConfig();
+		CronTrigger trigger = newTrigger()
+			    .withSchedule(cronSchedule(notifyCfg.getSchedule()))
+			    .build();
+		try {
+			JobDataMap jobDataMap = new JobDataMap();
+			jobDataMap.put("notifyCfg", notifyCfg);
+			jobDataMap.put("jobMgr", jobMgr);			
+			JobDetail job = newJob(NotificationJob.class)
+					.withDescription("Notification Service")
+					.setJobData(jobDataMap)
+					.build();				
+
+			scheduler.scheduleJob(job, trigger);
+		} catch (SchedulerException e) {
+			LOG.error("Failed to schedule job", e);
 		}
 	}
 }

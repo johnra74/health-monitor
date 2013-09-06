@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jstrgames.monitor.cfg.ValidationException;
-import com.jstrgames.monitor.rule.FailedRuleException;
 import com.jstrgames.monitor.rule.HttpResponseBody;
 import com.jstrgames.monitor.rule.HttpResponseCode;
 import com.jstrgames.monitor.rule.Rule;

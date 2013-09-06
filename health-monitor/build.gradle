@@ -19,6 +19,9 @@ dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	compile group: 'commons-io', name: 'commons-io', version: '2.+'
 	
+	compile group: 'javax', name: 'javaee-api', version: '7.+'
+	compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.+'
+		
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.2.5'
 	compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
 	compile group: 'org.freemarker', name: 'freemarker', version: '2.3.+'

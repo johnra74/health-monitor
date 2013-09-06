@@ -1,4 +1,4 @@
-[{"servicename": "Google Search", 
+[{"servicename": "HTTP Example", 
   "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
   "schedule": "0 0/5 * * * ?", 
   "hostname": "www.google.com", 
@@ -15,7 +15,7 @@
              "classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
              "condition": "contains", 
              "expected": "I'm Feeling Lucky"}]
- },{"servicename": "Google Search (SSL)", 
+ },{"servicename": "HTTPS Example (SSL)", 
   "classname": "com.jstrgames.monitor.svc.impl.HttpsService", 
   "schedule": "0 0/5 * * * ?", 
   "hostname": "www.google.com", 
@@ -32,17 +32,7 @@
              "classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
              "condition": "contains", 
              "expected": "I'm Feeling Lucky"}]
- },{"servicename": "Google Search (Failure Example)", 
-  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
-  "schedule": "0 0/30 * * * ?", 
-  "hostname": "www.google.com", 
-  "port": 80, 
-  "uri": "/",
-  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseCode", 
-             "condition": "equals", 
-             "expected": 302
-            }]
- },{"servicename": "Basic Auth + JSON Example", 
+ },{"servicename": "Basic Authentication + JSON Example", 
   "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
   "schedule": "0 0/15 * * * ?", 
   "hostname": "demo.jstrgames.com", 
@@ -80,12 +70,12 @@
              "condition": "lessthan", 
              "expected": 75
             }]
-},{"servicename": "Yahoo! News (Socket Example)", 
+},{"servicename": "Socket Example", 
   "classname": "com.jstrgames.monitor.svc.impl.SocketService", 
   "schedule": "0 0/30 * * * ?", 
   "hostname": "news.yahoo.com", 
   "port": 80
-},{"servicename": "Tomcat (JMX Example)", 
+},{"servicename": "Remote JMX Example", 
   "classname": "com.jstrgames.monitor.svc.impl.SimpleJmxService", 
   "schedule": "0 0/5 * * * ?", 
   "hostname": "192.168.1.150", 
@@ -102,7 +92,7 @@
              "condition": "lessthan", 
              "expected": 0.5
             }]
-},{"servicename": "Tomcat (JMX Servlet Proxy)", 
+},{"servicename": "JMX Proxy Servlet Example", 
   "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
   "schedule": "0 0/5 * * * ?", 
   "hostname": "192.168.1.150", 
@@ -115,4 +105,19 @@
              "condition": "contains", 
              "expected": "AvailableProcessors: 1"
             }]
+ },{"servicename": "Failure Example", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
+  "schedule": "0 0/5 * * * ?", 
+  "hostname": "www.google.com", 
+  "port": 80, 
+  "uri": "/",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseCode", 
+             "condition": "equals", 
+             "expected": 302
+            }]
+},{"servicename": "Error Example", 
+  "classname": "com.jstrgames.monitor.svc.impl.SocketService", 
+  "schedule": "0 0/5 * * * ?", 
+  "hostname": "127.0.0.1", 
+  "port": 9999
 }]
