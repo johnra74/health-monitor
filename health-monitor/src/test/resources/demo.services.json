@@ -1,0 +1,89 @@
+[{"servicename": "Google Search", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
+  "schedule": "0 0/5 * * * ?", 
+  "hostname": "www.google.com", 
+  "port": 80, 
+  "uri": "/",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseCode", 
+             "condition": "equals", 
+             "expected": 200
+            },{
+             "classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
+             "condition": "contains", 
+             "expected": "Google Search"
+            },{
+             "classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
+             "condition": "contains", 
+             "expected": "I'm Feeling Lucky"}]
+ },{"servicename": "Google Search (SSL)", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpsService", 
+  "schedule": "0 0/5 * * * ?", 
+  "hostname": "www.google.com", 
+  "port": 443, 
+  "uri": "/",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseCode", 
+             "condition": "equals", 
+             "expected": 200
+            },{
+             "classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
+             "condition": "contains", 
+             "expected": "Google Search"
+            },{
+             "classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
+             "condition": "contains", 
+             "expected": "I'm Feeling Lucky"}]
+ },{"servicename": "Google Search (Failure Example)", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
+  "schedule": "0 0/30 * * * ?", 
+  "hostname": "www.google.com", 
+  "port": 80, 
+  "uri": "/",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseCode", 
+             "condition": "equals", 
+             "expected": 302
+            }]
+ },{"servicename": "Basic Auth + JSON Example", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
+  "schedule": "0 0/15 * * * ?", 
+  "hostname": "demo.jstrgames.com", 
+  "port": 80, 
+  "uri": "/protected/monitor.json",
+  "authtype": "Basic",
+  "username": "monitor",
+  "password": "monitor",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseCode", 
+             "condition": "equals", 
+             "expected": 200
+            },{
+             "classname": "com.jstrgames.monitor.rule.JsonResponse",
+             "jsonkey": "name",
+             "condition": "equals", 
+             "expected": "monitor poc"
+            },{
+             "classname": "com.jstrgames.monitor.rule.JsonResponse",
+             "jsonkey": "description", 
+             "condition": "contains", 
+             "expected": "And most times they're friends"
+            },{
+             "classname": "com.jstrgames.monitor.rule.JsonResponse",
+             "jsonkey": "count", 
+             "condition": "equals", 
+             "expected": 12
+            },{
+             "classname": "com.jstrgames.monitor.rule.JsonResponse",
+             "jsonkey": "min", 
+             "condition": "greaterthan", 
+             "expected": 1
+            },{
+             "classname": "com.jstrgames.monitor.rule.JsonResponse",
+             "jsonkey": "max", 
+             "condition": "lessthan", 
+             "expected": 75
+            }]
+},{"servicename": "Yahoo! News (Socket Example)", 
+  "classname": "com.jstrgames.monitor.svc.impl.SocketService", 
+  "schedule": "0 0/30 * * * ?", 
+  "hostname": "news.yahoo.com", 
+  "port": 80, 
+  "uri": "/"
+}]

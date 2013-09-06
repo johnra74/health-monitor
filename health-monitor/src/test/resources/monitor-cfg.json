@@ -1,0 +1,4 @@
+[{"hostname": "0.0.0.0", 
+  "port": 80,
+  "template.home": "E:/work/Personal/java/monitor/workspace/health-monitor/src/main/resources/template",
+  "services.json": "E:/work/Personal/java/monitor/workspace/health-monitor/src/test/resources/services.json"}]

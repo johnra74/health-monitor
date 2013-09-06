@@ -1,0 +1,6 @@
+[{"servicename": "HTTP Service", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
+  "schedule": "0 0/5 * * * ?", 
+  "uri": "/"
+  "hostname": "192.168.1.150", 
+  "port": 80}]
