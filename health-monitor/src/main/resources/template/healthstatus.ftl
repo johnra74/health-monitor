@@ -20,7 +20,14 @@
 			z-index: -1;
 		}
 		table.gradienttable td.FAIL {
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#e73827',GradientType=0 ); 
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fceabb', endColorstr='#fbdf93',GradientType=0 );
+			position: relative;
+			z-index: -1;
+		} 
+		table.gradienttable td.ERROR {
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#e73827',GradientType=0 );
+			position: relative;
+			z-index: -1; 
 		}
 	</style>
 	<![endif]-->
@@ -81,6 +88,15 @@
 			border: 1px solid #999999;
 		}
 		table.gradienttable td.FAIL {
+			background: #fceabb; 
+			background: -moz-linear-gradient(top,  #fceabb 0%, #fccd4d 50%, #f8b500 51%, #fbdf93 100%); 
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fceabb), color-stop(50%,#fccd4d), color-stop(51%,#f8b500), color-stop(100%,#fbdf93)); 
+			background: -webkit-linear-gradient(top,  #fceabb 0%,#fccd4d 50%,#f8b500 51%,#fbdf93 100%); 
+			background: -o-linear-gradient(top,  #fceabb 0%,#fccd4d 50%,#f8b500 51%,#fbdf93 100%); 
+			background: -ms-linear-gradient(top,  #fceabb 0%,#fccd4d 50%,#f8b500 51%,#fbdf93 100%); 
+			background: linear-gradient(to bottom,  #fceabb 0%,#fccd4d 50%,#f8b500 51%,#fbdf93 100%); 
+		}
+		table.gradienttable td.ERROR {
 			padding: 0px;
 			background: #f85032; 
 			background: -moz-linear-gradient(top,  #f85032 0%, #f16f5c 50%, #f6290c 51%, #f02f17 71%, #e73827 100%); 
@@ -137,6 +153,9 @@
 			<#case "com.jstrgames.monitor.svc.impl.SocketService">
 				Socket
 			<#break>
+			<#case "com.jstrgames.monitor.svc.impl.SimpleJmxService">
+				JMX
+			<#break>
 			<#default>
 				UNKNOWN
 			<#break>
@@ -144,7 +163,7 @@
 		</p>
 	</td>
     <td><p>${status.getHostname()}</p></td>
-    <td><p>${status.getPort()}</p></td>
+    <td><p>${status.getPort()?string.computer}</p></td>
     <td <#if status.getStatus()??>class="${status.getStatus().toString()}"</#if>>
     	<p><#if status.getStatus()??>
     		${status.getStatus().toString()}

@@ -31,7 +31,7 @@ public interface ServiceConfig {
 	
 	String getClassName();
 	void setClassName(String className);
-	
+		
 	String getSchedule();
 	void setSchedule(String schedule);
 	

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
+import com.jstrgames.monitor.rule.FailedRuleException;
 import com.jstrgames.monitor.svc.Service;
 
 public class TestService {
@@ -13,10 +14,13 @@ public class TestService {
 	public void testFailService() {
 		Service service = mock(Service.class);
 		
-		// test success
-		when(service.checkService()).thenReturn(false);
-		
-		assertFalse(service.checkService());
+		// test fail
+		try {
+			when(service.isValidService()).thenReturn(false);
+			assertFalse(service.isValidService());
+		} catch (FailedRuleException e) {
+			fail("failed rule test");
+		}
 	}
 
 	@Test
@@ -24,8 +28,11 @@ public class TestService {
 		Service service = mock(Service.class);
 		
 		// test success
-		when(service.checkService()).thenReturn(true);
-		
-		assertTrue(service.checkService());
+		try {
+			when(service.isValidService()).thenReturn(true);
+			assertTrue(service.isValidService());
+		} catch (FailedRuleException e) {
+			fail("failed rule test");
+		}
 	}
 }

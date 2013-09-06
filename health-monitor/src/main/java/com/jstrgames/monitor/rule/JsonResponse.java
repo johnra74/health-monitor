@@ -28,7 +28,7 @@ public class JsonResponse extends BaseRule {
 	
 	@Override
 	public void validate() throws FailedRuleException {
-		if(jsonKey == null) {
+		if(this.jsonKey == null) {
 			throw new FailedRuleException("jsonKey not specified");
 		}
 		
@@ -53,7 +53,7 @@ public class JsonResponse extends BaseRule {
 					throw new FailedRuleException("expected value must be a string to perform contain check");
 				}
 				if(! ((String)jsonValue).contains((String)expectValue)) {
-					throw new FailedRuleException("response code does not contain expected");
+					throw new FailedRuleException("json value does not contain expected");
 				}
 				
 				break;
@@ -99,7 +99,7 @@ public class JsonResponse extends BaseRule {
 	@Override
 	public void setExtendedProperties(Map<String, Object> map) {
 		if(map.containsKey(EXTENDEDMAPKEY_JSONKEY)) {
-			jsonKey = (String) map.get(EXTENDEDMAPKEY_JSONKEY);
+			this.jsonKey = (String) map.get(EXTENDEDMAPKEY_JSONKEY);
 		}
 	}
 	

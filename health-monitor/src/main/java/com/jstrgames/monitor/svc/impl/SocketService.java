@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jstrgames.monitor.cfg.ValidationException;
+import com.jstrgames.monitor.svc.ServiceUnavailableException;
 
 /**
  * this class is used to verify a server is running at the
@@ -32,17 +33,16 @@ public class SocketService extends BaseService {
 	}
 
 	@Override
-	public boolean checkService() {
-		boolean isSuccess = true;
+	public void connectToService() throws ServiceUnavailableException {
 		Socket client = null;
 		try {
 			client = new Socket(this.getHostname(), this.getPort());
 		} catch (UnknownHostException e) {
 			LOG.info("Failed to connect to host", e);
-			isSuccess = false;
+			throw new ServiceUnavailableException("Failed to connect to host", e);
 		} catch (IOException e) {
 			LOG.info("Failed to read from socket", e);
-			isSuccess = false;
+			throw new ServiceUnavailableException("Failed to read from socket", e);
 		} finally {
 			if(client != null) {
 				try {
@@ -52,8 +52,6 @@ public class SocketService extends BaseService {
 				}
 			}
 		}
-
-		return isSuccess;
 	}
 
 }

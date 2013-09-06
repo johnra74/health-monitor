@@ -3,6 +3,7 @@ package com.jstrgames.monitor.svc.impl;
 import java.util.Map;
 
 import com.jstrgames.monitor.cfg.ValidationException;
+import com.jstrgames.monitor.svc.ServiceUnavailableException;
 import com.jstrgames.monitor.svc.impl.BaseService;
 
 /**
@@ -14,8 +15,8 @@ import com.jstrgames.monitor.svc.impl.BaseService;
 public class TestService extends BaseService {
 	
 	@Override
-	public boolean checkService() {
-		return true;
+	public void connectToService() throws ServiceUnavailableException {
+		// NOTHING TO CONNECT TO. DO NOTHING
 	}
 
 	@Override

@@ -84,6 +84,35 @@
   "classname": "com.jstrgames.monitor.svc.impl.SocketService", 
   "schedule": "0 0/30 * * * ?", 
   "hostname": "news.yahoo.com", 
-  "port": 80, 
-  "uri": "/"
+  "port": 80
+},{"servicename": "Tomcat (JMX Example)", 
+  "classname": "com.jstrgames.monitor.svc.impl.SimpleJmxService", 
+  "schedule": "0 0/5 * * * ?", 
+  "hostname": "192.168.1.150", 
+  "port": 9003,
+  "username": "monitor",
+  "password": "monitor",
+  "jmxquery": "java.lang:type=OperatingSystem",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.SimpleJmxResult", 
+             "attribute": "java.lang:type=OperatingSystem:OpenFileDescriptorCount", 
+             "condition": "lessthan", 
+             "expected": 256
+            },{"classname": "com.jstrgames.monitor.rule.SimpleJmxResult", 
+             "attribute": "java.lang:type=OperatingSystem:SystemLoadAverage", 
+             "condition": "lessthan", 
+             "expected": 0.5
+            }]
+},{"servicename": "Tomcat (JMX Servlet Proxy)", 
+  "classname": "com.jstrgames.monitor.svc.impl.HttpService", 
+  "schedule": "0 0/5 * * * ?", 
+  "hostname": "192.168.1.150", 
+  "port": 8080,
+  "uri": "/manager/jmxproxy/?qry=java.lang%3Atype%3DOperatingSystem%2C*",
+  "authtype": "Basic",
+  "username": "admin",
+  "password": "test",
+  "rules": [{"classname": "com.jstrgames.monitor.rule.HttpResponseBody", 
+             "condition": "contains", 
+             "expected": "AvailableProcessors: 1"
+            }]
 }]

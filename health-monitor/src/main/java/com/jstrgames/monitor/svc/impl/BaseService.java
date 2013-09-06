@@ -9,6 +9,7 @@ import com.jstrgames.monitor.cfg.ServiceConfig;
 import com.jstrgames.monitor.rule.FailedRuleException;
 import com.jstrgames.monitor.rule.Rule;
 import com.jstrgames.monitor.svc.Service;
+import com.jstrgames.monitor.svc.ServiceUnavailableException;
 
 /**
  * this abstract class represents the base service and implements
@@ -115,12 +116,20 @@ public abstract class BaseService implements Service {
 	 * 
 	 * @throws FailedRuleException
 	 */
-	protected final void validateRules() throws FailedRuleException {
-		if(this.rules != null) {
-			for(Rule rule: this.rules) {
-				rule.validate();
+	@Override
+	public final boolean isValidService() {
+		boolean isValid = true;
+		try {
+			if(this.rules != null) {
+				for(Rule rule: this.rules) {
+					rule.validate();
+				}
 			}
+		} catch (FailedRuleException e) {
+			isValid = false;
 		}
+		
+		return isValid;
 	}
 	
 	@Override
@@ -134,6 +143,7 @@ public abstract class BaseService implements Service {
 		fromExtendedMap(map);
 	}
 	
-	public abstract void fromExtendedMap(Map<String, Object> map);
-	public abstract boolean checkService();
+	public abstract void fromExtendedMap(Map<String, Object> map);	
+	public abstract void connectToService() throws ServiceUnavailableException;
+	
 }

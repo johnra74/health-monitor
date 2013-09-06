@@ -31,6 +31,7 @@ import com.jstrgames.monitor.rule.FailedRuleException;
 import com.jstrgames.monitor.rule.HttpResponseBody;
 import com.jstrgames.monitor.rule.HttpResponseCode;
 import com.jstrgames.monitor.rule.Rule;
+import com.jstrgames.monitor.svc.ServiceUnavailableException;
 
 /**
  * this class will validate the status of HTTP server status based on
@@ -116,8 +117,7 @@ public class HttpService extends BaseService {
 	}
 
 	@Override
-	public boolean checkService() {
-		boolean isSuccess = true;
+	public void connectToService() throws ServiceUnavailableException {
 		HttpClient client = this.getHttpClient();
 		HttpUriRequest request = new HttpGet(this.getURL());
 		try {
@@ -136,19 +136,13 @@ public class HttpService extends BaseService {
 				response = client.execute(request);
 			}
 			addResponseToRules(response);
-			validateRules();
 		} catch (ClientProtocolException e) {
 			LOG.info("Failed to connect to service", e);
-			isSuccess = false;
+			throw new ServiceUnavailableException("Failed to connect to service");
 		} catch (IOException e) {
 			LOG.info("Failed to read from service", e);
-			isSuccess = false;
-		} catch (FailedRuleException e) {
-			LOG.info("service rule failed", e);
-			isSuccess = false;
+			throw new ServiceUnavailableException("Failed to read from service");
 		}
-		
-		return isSuccess;
 	}
 	
 	/**
