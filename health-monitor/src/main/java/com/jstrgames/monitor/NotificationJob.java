@@ -44,29 +44,33 @@ public class NotificationJob implements Job {
 	 * 
 	 * @param notifyCfg
 	 * @param jobMgr
+	 * @return
 	 */
-	public void sendmail(NotificationConfig notifyCfg, JobManager jobMgr) {
+	public boolean sendmail(NotificationConfig notifyCfg, JobManager jobMgr) {
+		boolean hasSent = false;
 		if(! notifyCfg.shouldSendNotification(jobMgr)) {
 			LOG.debug("Not sending email as configured");
-			return;
+		} else {				
+			final Properties props = notifyCfg.getMailProperty();
+			final Session session;
+			if(notifyCfg.isSmtpAuthEnabled()) {
+				final Authenticator authn = notifyCfg.getAuthenticator();
+				session = Session.getInstance(props, authn);
+			} else {
+				session = Session.getInstance(props);
+			}
+			try {
+				Message msg = notifyCfg.createMessage(session, jobMgr);		
+				Transport.send(msg);
+				hasSent = true;
+			} catch (MessagingException e) {
+				LOG.error("Failed to send message!", e);
+			} catch (ConfigurationException e) {
+				LOG.error("Failed to create message!", e);
+			}		
 		}
-			
-		final Properties props = notifyCfg.getMailProperty();
-		final Session session;
-		if(notifyCfg.isSmtpAuthEnabled()) {
-			final Authenticator authn = notifyCfg.getAuthenticator();
-			session = Session.getInstance(props, authn);
-		} else {
-			session = Session.getInstance(props);
-		}
-		try {
-			Message msg = notifyCfg.createMessage(session, jobMgr);		
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			LOG.error("Failed to send message!", e);
-		} catch (ConfigurationException e) {
-			LOG.error("Failed to create message!", e);
-		}		
+		
+		return hasSent;
 	}
 	
 }

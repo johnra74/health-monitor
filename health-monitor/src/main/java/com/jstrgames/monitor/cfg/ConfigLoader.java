@@ -61,18 +61,17 @@ public class ConfigLoader {
 	
 	private void loadConfiguration(String json) throws ConfigurationException {
 		List<Map<String,Object>> mainCfg = fromJSON(json);
-		this.cfgMap = mainCfg.get(0);
-		if(this.cfgMap.containsKey(CFG_KEY_SERVICES_JSON)) {
+		this.cfgMap = mainCfg.get(0);		
+		try {
+			validateCfg(this.cfgMap);
 			String fileName = (String) this.cfgMap.get(CFG_KEY_SERVICES_JSON);
-			try {
-				setServiceJSON(new FileInputStream(fileName));
-			} catch (FileNotFoundException e) {
-				throw new ConfigurationException("failed to read monitor-cfg.json file");
-			}
-			this.cfgList = fromJSON(this.json);
-		} else {
-			throw new ConfigurationException("monitor-cfg.json missing services.json");
+			setServiceJSON(new FileInputStream(fileName));
+		} catch (ValidationException e1) {
+			throw new ConfigurationException("failed to read monitor-cfg.json file");
+		} catch (FileNotFoundException e) {
+			throw new ConfigurationException("failed to read monitor-cfg.json file");
 		}
+		this.cfgList = fromJSON(this.json);
 		
 		if(this.cfgMap.containsKey(CFG_KEY_NOTIFICATION)) {
 			@SuppressWarnings("unchecked")
@@ -276,6 +275,21 @@ public class ConfigLoader {
 		}	
 		if(!map.containsKey(ServiceConfig.SERVICE_NAME)){
 			throw new ValidationException("Missing servicename");
+		}
+	}
+	
+	private void validateCfg(Map<String,Object> map) throws ValidationException {
+		if(!map.containsKey(CFG_KEY_HOSTNAME)){
+			throw new ValidationException("Missing hostname");
+		}
+		if(!map.containsKey(CFG_KEY_PORT)){
+			throw new ValidationException("Missing port");
+		}
+		if(!map.containsKey(CFG_KEY_TEMPLATE_HOME)){
+			throw new ValidationException("Missing template dir");
+		}	
+		if(!map.containsKey(CFG_KEY_SERVICES_JSON)){
+			throw new ValidationException("Missing service");
 		}
 	}
 	

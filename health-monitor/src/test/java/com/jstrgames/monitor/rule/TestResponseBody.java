@@ -1,7 +1,6 @@
 package com.jstrgames.monitor.rule;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
