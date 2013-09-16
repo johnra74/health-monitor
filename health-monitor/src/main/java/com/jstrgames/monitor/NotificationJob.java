@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jstrgames.monitor.cfg.ConfigurationException;
 import com.jstrgames.monitor.cfg.NotificationConfig;
+import com.sun.mail.util.MailConnectException;
 
 /**
  * This is the notification implementations of quartz-scheduler job. For
@@ -35,8 +36,15 @@ public class NotificationJob implements Job {
 				context.getMergedJobDataMap().get("notifyCfg");		
 		JobManager jobMgr = (JobManager) 
 				context.getMergedJobDataMap().get("jobMgr");
-		
-		sendmail(notifyCfg, jobMgr);
+		Session session = getSession(notifyCfg, jobMgr);		
+		try {
+			Message msg = notifyCfg.createMessage(session, jobMgr);
+			sendmail(notifyCfg, jobMgr, msg);
+		} catch (ConfigurationException e) {
+			throw new JobExecutionException("failed to create default message",e);
+		} catch (MailServerUnavailableException e) {
+			LOG.error("failed to connect to mail server", e);
+		}
 	}
 	
 	/**
@@ -44,33 +52,49 @@ public class NotificationJob implements Job {
 	 * 
 	 * @param notifyCfg
 	 * @param jobMgr
+	 * @param session
 	 * @return
+	 * @throws MailServerUnavailableException
 	 */
-	public boolean sendmail(NotificationConfig notifyCfg, JobManager jobMgr) {
+	public boolean sendmail(NotificationConfig notifyCfg, JobManager jobMgr, Message msg)
+		throws MailServerUnavailableException {
 		boolean hasSent = false;
 		if(! notifyCfg.shouldSendNotification(jobMgr)) {
 			LOG.debug("Not sending email as configured");
 		} else {				
-			final Properties props = notifyCfg.getMailProperty();
-			final Session session;
-			if(notifyCfg.isSmtpAuthEnabled()) {
-				final Authenticator authn = notifyCfg.getAuthenticator();
-				session = Session.getInstance(props, authn);
-			} else {
-				session = Session.getInstance(props);
-			}
 			try {
-				Message msg = notifyCfg.createMessage(session, jobMgr);		
 				Transport.send(msg);
 				hasSent = true;
+			} catch (MailConnectException e) {
+				LOG.error("Unable to connect to SMTP server", e);
+				throw new MailServerUnavailableException("Unable to connect to SMTP server", e);
 			} catch (MessagingException e) {
 				LOG.error("Failed to send message!", e);
-			} catch (ConfigurationException e) {
-				LOG.error("Failed to create message!", e);
-			}		
+			}
 		}
 		
 		return hasSent;
+	}
+	
+	/**
+	 * method will retrieve an Mail session based on configuration
+	 *  
+	 * @param notifyCfg
+	 * @param jobMgr
+	 * @return
+	 */
+	protected Session getSession(NotificationConfig notifyCfg, JobManager jobMgr) {
+		final Session session;
+		final Properties props = notifyCfg.getMailProperty();
+		
+		if(notifyCfg.isSmtpAuthEnabled()) {
+			final Authenticator authn = notifyCfg.getAuthenticator();
+			session = Session.getInstance(props, authn);
+		} else {
+			session = Session.getInstance(props);
+		}
+		
+		return session;
 	}
 	
 }
