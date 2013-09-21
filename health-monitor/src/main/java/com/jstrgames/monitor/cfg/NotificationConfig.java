@@ -31,21 +31,21 @@ import com.jstrgames.monitor.tpl.TemplateDirNotFoundException;
 public class NotificationConfig {
 	private final static Logger LOG = LoggerFactory.getLogger(NotificationConfig.class);
 			
-	private final static String NOTIFICATION_SMTP_HOSTNAME = "smtp.hostname";
-	private final static String NOTIFICATION_SMTP_PORT = "smtp.port";
-	private final static String NOTIFICATION_SMTP_USERNAME = "smtp.username";
-	private final static String NOTIFICATION_SMTP_PASSWORD = "smtp.password";
+	protected final static String NOTIFICATION_SMTP_HOSTNAME = "smtp.hostname";
+	protected final static String NOTIFICATION_SMTP_PORT = "smtp.port";
+	protected final static String NOTIFICATION_SMTP_USERNAME = "smtp.username";
+	protected final static String NOTIFICATION_SMTP_PASSWORD = "smtp.password";
 	
-	private final static String NOTIFICATION_MAIL_FROM = "mail.from";
-	private final static String NOTIFICATION_MAIL_TO = "mail.to";
-	private final static String NOTIFICATION_MAIL_SUBJECT = "mail.subject";
-	private final static String NOTIFICATION_MAIL_NAME = "name";
-	private final static String NOTIFICATION_MAIL_EMAIL = "email";
+	protected final static String NOTIFICATION_MAIL_FROM = "mail.from";
+	protected final static String NOTIFICATION_MAIL_TO = "mail.to";
+	protected final static String NOTIFICATION_MAIL_SUBJECT = "mail.subject";
+	protected final static String NOTIFICATION_MAIL_NAME = "name";
+	protected final static String NOTIFICATION_MAIL_EMAIL = "email";
 	
-	private final static String NOTIFICATION_ONFAILURE = "notify.onfailure";
-	private final static String NOTIFICATION_ONLYFIRST = "notify.onlyfirst";
-	private final static String NOTIFICATION_ONCHANGE = "notify.onchange";
-	private final static String NOTIFICATION_SCHEDULE = "notify.schedule";
+	protected final static String NOTIFICATION_ONFAILURE = "notify.onfailure";
+	protected final static String NOTIFICATION_ONLYFIRST = "notify.onlyfirst";
+	protected final static String NOTIFICATION_ONCHANGE = "notify.onchange";
+	protected final static String NOTIFICATION_SCHEDULE = "notify.schedule";
 	
 	private int lastSuccessCnt;
 	
@@ -182,18 +182,20 @@ public class NotificationConfig {
 				if(!this.notifyOnlyFirst) {
 					// user always want to be notified.. this can SPAM user
 					shouldSend = true;
+					this.notifySend = true;
 				} else {
 					// user only wants to be notified on first failure
 					if(this.notifyOnChange &&				
 					   this.lastSuccessCnt != successCnt) {				
 						// user also wants to be notified when status changes
 						shouldSend = true;
+						this.notifySend = true;
 					} else if(!this.notifySend) {
 						// user should only be notified on first failure
 						shouldSend = true;
 						this.notifySend = true;
-					}
-				}
+					}					
+				}				
 			}
 		} else {
 			if(this.notifySend) {
@@ -203,6 +205,8 @@ public class NotificationConfig {
 				shouldSend = true;
 			}
 		}
+		
+		this.lastSuccessCnt = successCnt;		
 		return shouldSend;
 	}
 	
